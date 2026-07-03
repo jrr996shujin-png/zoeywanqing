@@ -12,247 +12,284 @@
     --paper:#F2EEDF; --paper-2:#ECE6D2;
     --ink:#2A241B; --ink-soft:#5C5345;
     --pink:#E1A4C2; --lemon:#C6CE50; --blush:#E0B79E; --sage:#9DB489; --lilac:#B7A7D4;
-    --pink-soft:#F3DBE8; --lemon-soft:#EFF2C9; --blush-soft:#F5E5D9; --sage-soft:#E0E8D6; --lilac-soft:#E7E0F1;
-    --card:rgba(255,255,255,0.66);
-    --rule:rgba(42,36,27,0.18); --rule-mid:rgba(42,36,27,0.34);
+    --pink-soft:#F1D6E4; --lemon-soft:#EEF1C4; --blush-soft:#F4E2D5; --sage-soft:#DCE6D2; --lilac-soft:#E4DCEF;
+    --card:rgba(255,255,255,0.62);
+    --rule:rgba(42,36,27,0.18); --rule-mid:rgba(42,36,27,0.35);
     --serif:'Cormorant Garamond','Noto Serif SC',Garamond,serif;
     --serif-cn:'Noto Serif SC',serif;
     --sans:'Work Sans','Noto Sans SC',sans-serif;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
   html,body{background:var(--paper)!important;color:var(--ink);font-family:var(--sans);}
-  body{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px;}
-
-  /* fixed poster frame — 1600 x 1240, scaled to viewport for live viewing.
-     .fit is sized to the SCALED dimensions so the page centers/scrolls correctly. */
-  .fit{margin:auto;}
-  .scaler{width:1600px;height:1240px;transform-origin:top left;}
-  .frame{
-    position:relative;width:1600px;height:1240px;padding:0;
-    background:
-      radial-gradient(circle at 12% 10%, rgba(255,255,255,0.55), transparent 38%),
-      radial-gradient(circle at 90% 92%, rgba(198,206,80,0.12), transparent 44%),
-      var(--paper);
-    border:1px solid var(--rule);
-    overflow:hidden;
+  body{
+    padding:52px clamp(18px,4vw,64px) 90px;
+    background-image:radial-gradient(circle at 12% 8%, rgba(255,255,255,0.5), transparent 40%),
+                     radial-gradient(circle at 92% 90%, rgba(198,206,80,0.10), transparent 46%);
   }
 
-  /* header */
-  .head{position:absolute;left:56px;top:34px;z-index:5;}
-  .head .kick{font-size:11px;letter-spacing:.38em;text-transform:uppercase;color:var(--ink-soft);font-weight:600;}
-  .head h1{font-family:var(--serif);font-weight:600;font-size:46px;line-height:.95;letter-spacing:-.01em;margin-top:2px;}
-  .head h1 em{font-style:italic;color:var(--ink-soft);}
-  .meta{position:absolute;right:56px;top:30px;z-index:5;text-align:right;
-    font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-soft);line-height:1.7;}
-  .meta b{display:block;font-family:var(--serif);font-style:italic;font-size:22px;letter-spacing:0;color:var(--ink);text-transform:none;margin:1px 0 2px;}
+  /* Masthead */
+  .masthead{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:18px;
+    border-bottom:1.5px solid var(--rule-mid);padding-bottom:20px;margin-bottom:12px;}
+  .kicker{font-size:12px;letter-spacing:.42em;text-transform:uppercase;color:var(--ink-soft);font-weight:600;}
+  .masthead h1{font-family:var(--serif);font-weight:600;font-size:clamp(42px,6.5vw,88px);line-height:.94;letter-spacing:-.015em;margin-top:6px;}
+  .masthead h1 em{font-style:italic;color:var(--ink-soft);}
+  .masthead .meta{text-align:right;font-size:11px;color:var(--ink-soft);letter-spacing:.16em;line-height:1.9;text-transform:uppercase;}
+  .masthead .meta b{display:block;font-family:var(--serif);font-size:30px;font-style:italic;font-weight:500;letter-spacing:0;color:var(--ink);text-transform:none;}
+  .subline{font-family:var(--serif);font-style:italic;font-size:clamp(17px,2.2vw,23px);color:var(--ink-soft);margin:8px 0 26px;max-width:72ch;}
 
-  /* wires */
-  svg#wires{position:absolute;inset:0;width:1600px;height:1240px;pointer-events:none;z-index:1;overflow:visible;}
+  /* ===== mind map canvas ===== */
+  .stage{position:relative;overflow-x:auto;padding:8px 4px 4px;}
+  .map{position:relative;display:flex;align-items:center;gap:0;min-width:1080px;}
+  svg#wires{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:visible;}
 
-  /* central hub */
-  .hub{position:absolute;left:666px;top:545px;width:268px;height:150px;z-index:3;
-    background:var(--ink);color:var(--paper);border-radius:26px;
-    display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
-    box-shadow:0 24px 46px -22px rgba(42,36,27,.72);}
-  .hub .t{font-size:9.5px;letter-spacing:.34em;text-transform:uppercase;opacity:.6;font-weight:600;}
-  .hub h2{font-family:var(--serif);font-weight:600;font-size:36px;line-height:.98;margin-top:4px;}
-  .hub p{font-family:var(--serif);font-style:italic;font-size:13px;opacity:.72;margin-top:7px;}
+  /* root */
+  .rootCol{flex:0 0 auto;z-index:2;padding-right:56px;}
+  .root{background:var(--ink);color:var(--paper);border-radius:28px;padding:26px 30px;width:250px;
+    box-shadow:0 26px 50px -26px rgba(42,36,27,.7);text-align:center;}
+  .root .t{font-size:10px;letter-spacing:.36em;text-transform:uppercase;opacity:.6;font-weight:600;}
+  .root h2{font-family:var(--serif);font-weight:600;font-size:38px;line-height:1;margin-top:6px;letter-spacing:-.01em;}
+  .root p{font-family:var(--serif);font-style:italic;font-size:14px;opacity:.72;margin-top:9px;line-height:1.4;}
 
-  /* phase cards */
-  .pcard{position:absolute;width:300px;z-index:2;border-radius:20px;overflow:hidden;
-    background:var(--card);border:1px solid var(--rule);box-shadow:0 16px 32px -26px rgba(42,36,27,.55);}
-  .pcard .ph{padding:12px 16px 11px;display:flex;align-items:center;gap:10px;position:relative;}
-  .pcard .pn{font-family:var(--serif);font-style:italic;font-weight:500;font-size:30px;line-height:.8;color:rgba(42,36,27,.42);}
-  .pcard .pw{font-family:var(--serif-cn);font-weight:700;font-size:18px;line-height:1.05;flex:1 1 auto;}
-  .pcard .ps{font-size:9px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;white-space:nowrap;
-    background:rgba(255,255,255,.55);border:1px solid rgba(42,36,27,.24);border-radius:999px;padding:4px 9px;}
-  .r1 .ph{background:var(--pink);} .r2 .ph{background:var(--lemon);}
-  .r3 .ph{background:var(--blush);} .r4 .ph{background:var(--sage);} .r5 .ph{background:var(--lilac);}
+  /* tree of phases */
+  .tree{flex:1 1 auto;display:flex;flex-direction:column;gap:30px;z-index:1;}
+  .row{display:flex;align-items:center;gap:52px;}
 
-  .pbody{padding:12px 16px 14px;}
-  .act{padding:9px 11px;border-radius:12px;margin-bottom:11px;border:1px solid rgba(42,36,27,.14);}
-  .r1 .act{background:var(--pink-soft);} .r2 .act{background:var(--lemon-soft);}
-  .r3 .act{background:var(--blush-soft);} .r4 .act{background:var(--sage-soft);} .r5 .act{background:var(--lilac-soft);}
-  .act .h{font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft);font-weight:600;margin-bottom:5px;}
-  .act p{font-family:var(--serif-cn);font-size:12.5px;line-height:1.42;color:var(--ink);margin-top:3px;}
-  .act .n{display:inline-block;width:15px;height:15px;border-radius:50%;background:var(--ink);color:var(--paper);
-    font-family:var(--sans);font-size:9px;font-weight:600;text-align:center;line-height:15px;margin-right:5px;vertical-align:1px;}
-  .hi{background:var(--lemon);padding:0 3px;border-radius:3px;font-weight:600;box-decoration-break:clone;-webkit-box-decoration-break:clone;}
+  /* phase node (main branch) */
+  .phase{flex:0 0 auto;width:214px;border-radius:22px;overflow:hidden;background:var(--card);
+    border:1px solid var(--rule);box-shadow:0 16px 34px -28px rgba(42,36,27,.55);position:relative;
+    transition:transform .3s cubic-bezier(.2,.7,.3,1);}
+  .phase:hover{transform:translateY(-4px);}
+  .phase .cap{padding:16px 18px 15px;position:relative;}
+  .phase .no{font-family:var(--serif);font-style:italic;font-weight:500;font-size:34px;line-height:.8;color:rgba(42,36,27,.4);}
+  .phase .when{font-family:var(--serif-cn);font-weight:700;font-size:20px;line-height:1.15;margin-top:4px;}
+  .phase .stg{display:inline-block;margin-top:9px;font-size:10px;letter-spacing:.15em;text-transform:uppercase;font-weight:600;
+    background:rgba(255,255,255,.6);border:1px solid rgba(42,36,27,.24);border-radius:999px;padding:4px 11px;}
+  .r1 .cap{background:var(--pink);} .r2 .cap{background:var(--lemon);}
+  .r3 .cap{background:var(--blush);} .r4 .cap{background:var(--sage);} .r5 .cap{background:var(--lilac);}
 
-  .grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(42,36,27,.14);
-    border:1px solid rgba(42,36,27,.14);border-radius:10px;overflow:hidden;}
-  .grid > div{background:var(--card);padding:7px 11px;}
-  .grid .wide{grid-column:1 / -1;}
-  .grid span{display:block;font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);font-weight:600;margin-bottom:1px;}
-  .grid b{font-family:var(--serif-cn);font-size:12.5px;font-weight:400;color:var(--ink);}
-  .grid b .num{font-family:var(--sans);font-weight:600;font-size:15px;font-variant-numeric:lining-nums;letter-spacing:.01em;}
+  /* leaf group (sub-branches) */
+  .leaves{flex:1 1 auto;display:flex;flex-direction:column;gap:9px;}
+  .leaf{background:var(--card);border:1px solid var(--rule);border-radius:14px;padding:10px 15px;position:relative;
+    display:flex;gap:12px;align-items:baseline;transition:transform .25s;}
+  .leaf:hover{transform:translateX(3px);}
+  .leaf .lb{flex:0 0 66px;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);font-weight:600;
+    display:flex;align-items:center;gap:6px;padding-top:2px;}
+  .leaf .lb::before{content:"";width:8px;height:8px;border-radius:50%;flex:none;}
+  .leaf .vl{flex:1 1 auto;font-family:var(--serif-cn);font-size:13.5px;line-height:1.5;color:var(--ink);font-weight:400;}
+  .r1 .leaf .lb::before{background:var(--pink);} .r2 .leaf .lb::before{background:var(--lemon);}
+  .r3 .leaf .lb::before{background:var(--blush);} .r4 .leaf .lb::before{background:var(--sage);} .r5 .leaf .lb::before{background:var(--lilac);}
 
-  /* byline */
-  .byline{position:absolute;right:56px;bottom:30px;z-index:5;text-align:right;}
-  .byline .sig{font-family:var(--serif);font-style:italic;font-size:26px;color:var(--ink);line-height:1;}
-  .byline .sub{font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--ink-soft);margin-top:4px;}
-  .foot{position:absolute;left:56px;bottom:32px;z-index:5;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-soft);}
+  /* the action leaf is the headline branch */
+  .leaf.act{border-color:rgba(42,36,27,.28);}
+  .r1 .leaf.act{background:var(--pink-soft);} .r2 .leaf.act{background:var(--lemon-soft);}
+  .r3 .leaf.act{background:var(--blush-soft);} .r4 .leaf.act{background:var(--sage-soft);} .r5 .leaf.act{background:var(--lilac-soft);}
+  .leaf.act .vl ol{list-style:none;counter-reset:a;display:flex;flex-direction:column;gap:6px;}
+  .leaf.act .vl li{position:relative;counter-increment:a;padding-left:22px;}
+  .leaf.act .vl li::before{content:counter(a);position:absolute;left:0;top:1px;width:16px;height:16px;border-radius:50%;
+    background:var(--ink);color:var(--paper);font-family:var(--sans);font-size:9px;font-weight:600;display:flex;align-items:center;justify-content:center;}
+  .hi{background:var(--lemon);padding:0 3px;border-radius:3px;box-decoration-break:clone;-webkit-box-decoration-break:clone;font-weight:600;}
+  .metric .num{font-family:var(--serif);font-weight:600;font-size:20px;letter-spacing:0;}
 
-  @keyframes wirein{from{opacity:0;}to{opacity:.6;}}
-  #wires path{animation:wirein .9s ease-out both;}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;margin:2px 0 20px;font-size:11px;color:var(--ink-soft);letter-spacing:.06em;}
+  .legend span{display:flex;align-items:center;gap:7px;}
+  .legend i{width:12px;height:12px;border-radius:4px;}
+
+  .footnote{margin-top:48px;padding-top:20px;border-top:1.5px solid var(--rule-mid);display:flex;justify-content:space-between;
+    flex-wrap:wrap;gap:14px;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-soft);}
+  .footnote em{font-family:var(--serif);font-style:italic;text-transform:none;letter-spacing:0;font-size:15px;}
+
+  /* mobile: stack, hide svg wires, use guide rails */
+  @media(max-width:900px){
+    .stage{overflow-x:visible;}
+    .map{flex-direction:column;align-items:stretch;min-width:0;gap:24px;}
+    svg#wires{display:none;}
+    .rootCol{padding-right:0;}
+    .root{width:100%;}
+    .tree{gap:22px;}
+    .row{flex-direction:column;align-items:stretch;gap:12px;border-left:3px solid var(--rule);padding-left:16px;position:relative;}
+    .r1.row{border-color:var(--pink);} .r2.row{border-color:var(--lemon);} .r3.row{border-color:var(--blush);}
+    .r4.row{border-color:var(--sage);} .r5.row{border-color:var(--lilac);}
+    .phase{width:100%;}
+  }
+
+  @keyframes rise{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+  .root,.row{animation:rise .6s cubic-bezier(.2,.7,.3,1) both;}
+  .r1{animation-delay:.08s;} .r2{animation-delay:.16s;} .r3{animation-delay:.24s;} .r4{animation-delay:.32s;} .r5{animation-delay:.40s;}
+  @keyframes dash{to{stroke-dashoffset:0;}}
+  #wires path{stroke-dasharray:1400;stroke-dashoffset:1400;animation:dash 1.1s ease-out forwards;}
 </style>
 </head>
 <body>
-<div class="fit" id="fit"><div class="scaler" id="scaler">
-  <div class="frame" id="frame">
 
-    <div class="head">
-      <div class="kick">Marketing Playbook · 市场部</div>
-      <h1>爆款推广 <em>SOP · 思维导图</em></h1>
+  <header class="masthead">
+    <div>
+      <div class="kicker">Marketing Playbook · 市场部</div>
+      <h1>爆款推广 <em>SOP</em></h1>
     </div>
-    <div class="meta">Timeline<br><b>T-2w → 4w</b>5 Phases · 6 Lanes</div>
+    <div class="meta">Timeline<br><b>T-2w → 4w</b>Five phases · Six lanes</div>
+  </header>
+  <p class="subline">中心议题向外辐射的思维导图 —— 一条主干分出五个时间阶段，每个阶段再展开配合动作、博主、样衣、官号、运营与预算。</p>
 
-    <svg id="wires" xmlns="http://www.w3.org/2000/svg"></svg>
-
-    <!-- hub -->
-    <div class="hub" id="hub">
-      <div class="t">Central Topic</div>
-      <h2>爆款推广 SOP</h2>
-      <p>时间节点 × 六维配合</p>
-    </div>
-
-    <!-- 01 top-left -->
-    <div class="pcard r1" data-card style="left:64px;top:152px;">
-      <div class="ph"><span class="pn">01</span><span class="pw">产品上市前 2 周</span><span class="ps">Pre-launch</span></div>
-      <div class="pbody">
-        <div class="act"><div class="h">配合动作</div>
-          <p><span class="n">1</span>主推品 list 保证每款有博主返图，挑出<span class="hi">重点主推 1–5 款</span></p>
-          <p><span class="n">2</span>重点款目标发布占比 45–50%（爆款承担 60% 销售）</p></div>
-        <div class="grid">
-          <div><span>博主数量</span><b><span class="num">10–20</span> 篇</b></div>
-          <div><span>样衣需求</span><b><span class="num">2</span> 件</b></div>
-          <div class="wide"><span>官号</span><b>转载优质博主图</b></div>
-          <div><span>运营配合</span><b>—</b></div>
-          <div><span>预算</span><b>—</b></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 02 top-center -->
-    <div class="pcard r2" data-card style="left:650px;top:152px;">
-      <div class="ph"><span class="pn">02</span><span class="pw">1 – 4 周</span><span class="ps">蓄水期</span></div>
-      <div class="pbody">
-        <div class="act"><div class="h">配合动作</div>
-          <p><span class="n">1</span>蓄水阶段：大量素人种草，用发布量增大新增用户在小红书刷到的概率</p>
-          <p><span class="n">2</span>艺人上身后全部增加艺人同款，增强品牌背书</p></div>
-        <div class="grid">
-          <div><span>博主数量</span><b><span class="num">30</span> 篇</b></div>
-          <div><span>样衣需求</span><b><span class="num">7</span> 件</b></div>
-          <div class="wide"><span>官号</span><b>创拍视频 - 发布</b></div>
-          <div class="wide"><span>运营配合</span><b>天猫承接流量</b></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 03 top-right -->
-    <div class="pcard r3" data-card style="left:1236px;top:152px;">
-      <div class="ph"><span class="pn">03</span><span class="pw">1 – 2 周</span><span class="ps">明星助推</span></div>
-      <div class="pbody">
-        <div class="act"><div class="h">配合动作</div>
-          <p><span class="n">1</span>流量明星助推</p>
-          <p><span class="n">2</span>利用明星做二次营销，扩大曝光，吸引大众视线聚焦到衣服上，促进转化</p></div>
-        <div class="grid">
-          <div><span>博主数量</span><b><span class="num">20</span> 篇</b></div>
-          <div><span>样衣需求</span><b>/</b></div>
-          <div class="wide"><span>官号</span><b>官号转载艺人图</b></div>
-          <div class="wide"><span>运营配合</span><b>天猫可加明星同款，并承接流量</b></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 04 bottom-left -->
-    <div class="pcard r4" data-card style="left:358px;top:772px;">
-      <div class="ph"><span class="pn">04</span><span class="pw">2 – 4 周</span><span class="ps">大流量冲刺</span></div>
-      <div class="pbody">
-        <div class="act"><div class="h">配合动作</div>
-          <p><span class="n">1</span>大流量博主冲刺爆文，用大曝光提升新用户刷到品牌的概率和下单率</p>
-          <p><span class="n">2</span>ps：天猫关注爆文博主的流量反哺，判断是否带货、能否长期合作</p></div>
-        <div class="grid">
-          <div><span>博主数量</span><b><span class="num">15</span> 篇</b></div>
-          <div><span>样衣需求</span><b><span class="num">4</span> 件</b></div>
-          <div class="wide"><span>官号</span><b>转载优质博主图 + 创意视频</b></div>
-          <div class="wide"><span>运营配合</span><b>天猫承接流量，注意流量变化（如拍立淘），判断带货</b></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 05 bottom-right -->
-    <div class="pcard r5" data-card style="left:942px;top:772px;">
-      <div class="ph"><span class="pn">05</span><span class="pw">3 – 4 周</span><span class="ps">报备加热</span></div>
-      <div class="pbody">
-        <div class="act"><div class="h">配合动作</div>
-          <p><span class="n">1</span>合作报备博主</p>
-          <p><span class="n">2</span>报备笔记讲卖点品牌不受限，更好传播价值质感；官方内容加热，达人内容持续择优投流</p></div>
-        <div class="grid">
-          <div><span>博主数量</span><b><span class="num">15</span> 篇</b></div>
-          <div><span>样衣需求</span><b><span class="num">4</span> 件</b></div>
-          <div class="wide"><span>官号</span><b>官号转载报备博主视频</b></div>
-          <div class="wide"><span>运营配合</span><b>同步天猫节奏，选数据好博主投流加热，促进转发</b></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="foot">市场部 · 爆款推广标准作业流程</div>
-    <div class="byline"><div class="sig">— zoeywanqing</div><div class="sub">Design &amp; Mind Map</div></div>
-
+  <div class="legend">
+    <span><i style="background:var(--pink)"></i>上市前 · 主推布局</span>
+    <span><i style="background:var(--lemon)"></i>蓄水 · 素人种草</span>
+    <span><i style="background:var(--blush)"></i>明星助推</span>
+    <span><i style="background:var(--sage)"></i>大流量冲刺</span>
+    <span><i style="background:var(--lilac)"></i>报备加热</span>
   </div>
-</div></div>
+
+  <div class="stage">
+    <div class="map" id="map">
+      <svg id="wires" xmlns="http://www.w3.org/2000/svg"></svg>
+
+      <!-- central node -->
+      <div class="rootCol">
+        <div class="root" id="root">
+          <div class="t">Central Topic</div>
+          <h2>爆款推广 SOP</h2>
+          <p>时间节点 × 六维配合</p>
+        </div>
+      </div>
+
+      <!-- branches -->
+      <div class="tree">
+
+        <div class="row r1" data-phase>
+          <div class="phase" data-node><div class="cap"><div class="no">01</div><div class="when">产品上市前 2 周</div><span class="stg">Pre-launch</span></div></div>
+          <div class="leaves">
+            <div class="leaf act" data-leaf><div class="lb">配合动作</div><div class="vl"><ol>
+              <li>根据主推品 list 保证每款都有博主返图，挑出<span class="hi">重点主推的 1–5 款</span></li>
+              <li>重点款目标发布占比总发布 45–50%（爆款承担 60% 销售）</li></ol></div></div>
+            <div class="leaf" data-leaf><div class="lb">博主数量</div><div class="vl"><span class="num">10–20</span> 篇</div></div>
+            <div class="leaf" data-leaf><div class="lb">样衣需求</div><div class="vl"><span class="num">2</span> 件</div></div>
+            <div class="leaf" data-leaf><div class="lb">官号</div><div class="vl">转载优质博主图</div></div>
+            <div class="leaf" data-leaf><div class="lb">运营配合</div><div class="vl">—</div></div>
+            <div class="leaf" data-leaf><div class="lb">预算</div><div class="vl">—</div></div>
+          </div>
+        </div>
+
+        <div class="row r2" data-phase>
+          <div class="phase" data-node><div class="cap"><div class="no">02</div><div class="when">1 – 4 周</div><span class="stg">蓄水期</span></div></div>
+          <div class="leaves">
+            <div class="leaf act" data-leaf><div class="lb">配合动作</div><div class="vl"><ol>
+              <li>蓄水阶段：大量素人种草，用发布数量增大新增用户在小红书刷到的概率</li>
+              <li>有艺人上身后，可全部增加艺人同款，利用艺人增强品牌背书</li></ol></div></div>
+            <div class="leaf" data-leaf><div class="lb">博主数量</div><div class="vl"><span class="num">30</span> 篇</div></div>
+            <div class="leaf" data-leaf><div class="lb">样衣需求</div><div class="vl"><span class="num">7</span> 件</div></div>
+            <div class="leaf" data-leaf><div class="lb">官号</div><div class="vl">创拍视频 - 发布</div></div>
+            <div class="leaf" data-leaf><div class="lb">运营配合</div><div class="vl">天猫承接流量</div></div>
+            <div class="leaf" data-leaf><div class="lb">预算</div><div class="vl">—</div></div>
+          </div>
+        </div>
+
+        <div class="row r3" data-phase>
+          <div class="phase" data-node><div class="cap"><div class="no">03</div><div class="when">1 – 2 周</div><span class="stg">明星助推</span></div></div>
+          <div class="leaves">
+            <div class="leaf act" data-leaf><div class="lb">配合动作</div><div class="vl"><ol>
+              <li>流量明星助推</li>
+              <li>利用明星做二次营销，扩大曝光，同时吸引大众视线聚焦到衣服上，促进转化</li></ol></div></div>
+            <div class="leaf" data-leaf><div class="lb">博主数量</div><div class="vl"><span class="num">20</span> 篇</div></div>
+            <div class="leaf" data-leaf><div class="lb">样衣需求</div><div class="vl">/</div></div>
+            <div class="leaf" data-leaf><div class="lb">官号</div><div class="vl">官号转载艺人图</div></div>
+            <div class="leaf" data-leaf><div class="lb">运营配合</div><div class="vl">天猫可加明星同款，并承接流量</div></div>
+            <div class="leaf" data-leaf><div class="lb">预算</div><div class="vl">—</div></div>
+          </div>
+        </div>
+
+        <div class="row r4" data-phase>
+          <div class="phase" data-node><div class="cap"><div class="no">04</div><div class="when">2 – 4 周</div><span class="stg">大流量冲刺</span></div></div>
+          <div class="leaves">
+            <div class="leaf act" data-leaf><div class="lb">配合动作</div><div class="vl"><ol>
+              <li>大流量博主可冲刺爆文，利用大曝光增加新用户刷到品牌的概率和下单率</li>
+              <li>ps：天猫需时刻注意爆文博主带来的流量反哺，判断博主是否带货、能否长期合作</li></ol></div></div>
+            <div class="leaf" data-leaf><div class="lb">博主数量</div><div class="vl"><span class="num">15</span> 篇</div></div>
+            <div class="leaf" data-leaf><div class="lb">样衣需求</div><div class="vl"><span class="num">4</span> 件</div></div>
+            <div class="leaf" data-leaf><div class="lb">官号</div><div class="vl">官号转载优质博主图 + 创意视频</div></div>
+            <div class="leaf" data-leaf><div class="lb">运营配合</div><div class="vl">天猫承接流量，注意流量变化（如拍立淘），判断博主是否带货</div></div>
+            <div class="leaf" data-leaf><div class="lb">预算</div><div class="vl">—</div></div>
+          </div>
+        </div>
+
+        <div class="row r5" data-phase>
+          <div class="phase" data-node><div class="cap"><div class="no">05</div><div class="when">3 – 4 周</div><span class="stg">报备加热</span></div></div>
+          <div class="leaves">
+            <div class="leaf act" data-leaf><div class="lb">配合动作</div><div class="vl"><ol>
+              <li>合作报备博主</li>
+              <li>报备笔记可讲卖点和品牌不被限制，更好传播品牌价值质感；利用官方内容加热，达人内容持续择优加热投流</li></ol></div></div>
+            <div class="leaf" data-leaf><div class="lb">博主数量</div><div class="vl"><span class="num">15</span> 篇</div></div>
+            <div class="leaf" data-leaf><div class="lb">样衣需求</div><div class="vl"><span class="num">4</span> 件</div></div>
+            <div class="leaf" data-leaf><div class="lb">官号</div><div class="vl">官号转载报备博主视频</div></div>
+            <div class="leaf" data-leaf><div class="lb">运营配合</div><div class="vl">同步天猫节奏，选数据好的博主投流加热，促进转发</div></div>
+            <div class="leaf" data-leaf><div class="lb">预算</div><div class="vl">—</div></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <footer class="footnote">
+    <span>市场部 · 爆款推广标准作业流程</span>
+    <em>— zoeywanqing · Design &amp; Mind Map</em>
+    <span>1 Topic → 5 Phases → 6 Lanes</span>
+  </footer>
 
 <script>
-  const COLORS={r1:'#E1A4C2',r2:'#C6CE50',r3:'#E0B79E',r4:'#9DB489',r5:'#B7A7D4'};
-  const frame=document.getElementById('frame');
-  const svg=document.getElementById('wires');
-  const hub=document.getElementById('hub');
+  const COLORS = {r1:'#E1A4C2', r2:'#C6CE50', r3:'#E0B79E', r4:'#9DB489', r5:'#B7A7D4'};
+  const map = document.getElementById('map');
+  const svg = document.getElementById('wires');
 
-  function rectIn(el){const f=frame.getBoundingClientRect(),r=el.getBoundingClientRect(),s=1600/f.width;
-    return {x:(r.left-f.left)*s,y:(r.top-f.top)*s,w:r.width*s,h:r.height*s,cx:(r.left-f.left)*s+r.width*s/2,cy:(r.top-f.top)*s+r.height*s/2};}
-  function edgePoint(rc,tx,ty){ // point on rect border toward (tx,ty)
-    const dx=tx-rc.cx, dy=ty-rc.cy, hw=rc.w/2, hh=rc.h/2;
-    const sx=dx?hw/Math.abs(dx):1e9, sy=dy?hh/Math.abs(dy):1e9, t=Math.min(sx,sy);
-    return {x:rc.cx+dx*t, y:rc.cy+dy*t};
+  function pt(el){
+    const m = map.getBoundingClientRect();
+    const r = el.getBoundingClientRect();
+    return {m, r, left:r.left-m.left, top:r.top-m.top, w:r.width, h:r.height};
   }
-  function curve(a,b){const dx=Math.abs(b.x-a.x)*0.45, dy=Math.abs(b.y-a.y)*0.35;
-    const cx1=a.x+(b.x>a.x?dx:-dx), cx2=b.x+(b.x>a.x?-dx:dx);
-    return `M ${a.x} ${a.y} C ${cx1} ${a.y+ (b.y>a.y?dy:-dy)*0.2}, ${cx2} ${b.y-(b.y>a.y?dy:-dy)*0.2}, ${b.x} ${b.y}`;}
-  function stroke(d,color,w){const p=document.createElementNS('http://www.w3.org/2000/svg','path');
-    p.setAttribute('d',d);p.setAttribute('fill','none');p.setAttribute('stroke',color);
-    p.setAttribute('stroke-width',w);p.setAttribute('stroke-linecap','round');p.setAttribute('opacity',0.6);svg.appendChild(p);}
-  function dot(x,y,color){const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
-    c.setAttribute('cx',x);c.setAttribute('cy',y);c.setAttribute('r',4);c.setAttribute('fill',color);svg.appendChild(c);}
-
+  function curve(x1,y1,x2,y2){
+    const dx = Math.max(40,(x2-x1)*0.5);
+    return `M ${x1} ${y1} C ${x1+dx} ${y1}, ${x2-dx} ${y2}, ${x2} ${y2}`;
+  }
+  function line(x1,y1,x2,y2,color,w){
+    const p = document.createElementNS('http://www.w3.org/2000/svg','path');
+    p.setAttribute('d', curve(x1,y1,x2,y2));
+    p.setAttribute('fill','none');
+    p.setAttribute('stroke', color);
+    p.setAttribute('stroke-width', w);
+    p.setAttribute('stroke-linecap','round');
+    p.setAttribute('opacity', 0.62);
+    svg.appendChild(p);
+  }
+  function dot(x,y,color){
+    const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    c.setAttribute('cx',x); c.setAttribute('cy',y); c.setAttribute('r',3.4);
+    c.setAttribute('fill',color); svg.appendChild(c);
+  }
   function draw(){
     svg.innerHTML='';
-    const H=rectIn(hub);
-    document.querySelectorAll('.pcard').forEach(card=>{
-      const key=[...card.classList].find(c=>/^r\d$/.test(c));
-      const color=COLORS[key];
-      const C=rectIn(card);
-      const a=edgePoint(H,C.cx,C.cy);
-      const b=edgePoint(C,H.cx,H.cy);
-      stroke(curve(a,b),color,3);
-      dot(b.x,b.y,color);
-      dot(a.x,a.y,color);
+    if(window.innerWidth<=900) return;
+    const root = pt(document.getElementById('root'));
+    const rootRx = root.left+root.w, rootRy = root.top+root.h/2;
+    document.querySelectorAll('.row').forEach(row=>{
+      const key = [...row.classList].find(c=>/^r\d$/.test(c));
+      const color = COLORS[key];
+      const node = pt(row.querySelector('[data-node]'));
+      const nLx = node.left, nLy = node.top+node.h/2;
+      const nRx = node.left+node.w, nRy = node.top+node.h/2;
+      // trunk: root -> phase node
+      line(rootRx, rootRy, nLx, nLy, color, 3.2);
+      dot(nLx, nLy, color);
+      // sub-branches: phase node -> each leaf
+      row.querySelectorAll('[data-leaf]').forEach(lf=>{
+        const l = pt(lf);
+        line(nRx, nRy, l.left, l.top+l.h/2, color, 1.8);
+        dot(l.left, l.top+l.h/2, color);
+      });
     });
   }
-  function scale(){
-    const pad=28;
-    const s=Math.min((window.innerWidth-pad)/1600, (window.innerHeight-pad)/1240, 1);
-    document.getElementById('scaler').style.transform='scale('+s+')';
-    const fit=document.getElementById('fit');
-    fit.style.width=(1600*s)+'px';
-    fit.style.height=(1240*s)+'px';
-  }
-  function all(){scale();draw();}
-  all();                                   // draw immediately (headless-safe)
-  [50,150,400,900].forEach(t=>setTimeout(all,t));   // redraw as fonts settle
-  window.addEventListener('load',all);
-  window.addEventListener('resize',()=>requestAnimationFrame(all));
-  if(document.fonts&&document.fonts.ready){document.fonts.ready.then(all);}
+  const ro = new ResizeObserver(()=>requestAnimationFrame(draw));
+  ro.observe(map);
+  window.addEventListener('load', ()=>setTimeout(draw,60));
+  window.addEventListener('resize', ()=>requestAnimationFrame(draw));
+  if(document.fonts && document.fonts.ready){document.fonts.ready.then(()=>setTimeout(draw,80));}
 </script>
 </body>
 </html>
